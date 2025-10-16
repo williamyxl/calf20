@@ -1,3 +1,9 @@
+# dependents: numpy, pandas, scipy only
+# no need for ASE, PyMatGen, etc.
+# pure coordinate manipulation
+# author: Xiaoli Yan, williamyxl@gmail.com
+#
+
 import io
 import os
 import numpy as np
@@ -357,8 +363,8 @@ def assemble_dmc(tri_fpath, oxa_fpath, assembled_fpath):
         M2[2, :] = -M2[2, :]
         total_df2.loc[:, ["x", "y", "z"]] = total_df2.loc[:, ["x", "y", "z"]].values + M2[2, :]
 
-    # write to file
-    write_xyzfile(total_df2, assembled_fpath, box_vec=M2, origin=origin)
+    # write extxyz file for OVITO visualization
+    # write_xyzfile(total_df2, assembled_fpath, box_vec=M2, origin=origin)
 
     return M2, total_df2
 
@@ -389,3 +395,14 @@ def make_supercell(M, atom_df, N_supercell=[1, 1, 1]):
     #write_xyzfile(atom_df, os.path.join(folder_path, "supercell.extxyz"), box_vec=M, origin=[0, 0, 0])
     return M, atom_df
 
+
+
+if __name__ == "__main__":
+    for triangle_name in ["triazole", "246-4py-py", "4-carboxyl-pyrazole"]:
+        for diamond_name in ["oxa", "squ", "bdc", "cub", "fum", "ttdc", "4,4'-bipy"]:
+            triangle_fpath = os.path.join("tri", triangle_name + ".xyz")
+            diamond_fpath = os.path.join("oxa", diamond_name + ".xyz")
+            assembled_name = triangle_name + "_" + diamond_name
+            assembled_fpath = os.path.join("assembled", assembled_name + ".extxyz")
+            M, atom_df = assemble_dmc(triangle_fpath, diamond_fpath, assembled_fpath)
+            write_ciffile(atom_df, M, os.path.join("assembled", assembled_name + ".cif"))
