@@ -163,7 +163,7 @@ def write_xyzfile(atom_df, fpath, box_vec=None, origin=[0,0,0]):
 #                          |
 #                          N
 #                        /   \
-#                      C       C
+#                 H -- C       C -- H
 #                       \     /
 #                        N - N
 #                       /     \
